@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - run: sudo apt-get update
       - run: sudo apt-get install g++ clang make cmake libcurl4-openssl-dev
       - run: mkdir -p build && cd build && cmake .. && make
