@@ -14,6 +14,15 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/external/libhv)
 include_directories(${GT_INCLUDE})
 add_subdirectory(${PROJECT_SOURCE_DIR}/external/googletest)
 
+include(FetchContent)
+#postgres
+FetchContent_Declare(
+        pq
+        GIT_REPOSITORY https://github.com/postgres/postgres
+        GIT_TAG master
+)
+FetchContent_MakeAvailable(pq)
+
 #Utility
 include_directories(${PROJECT_SOURCE_DIR}/src/Utility)
 add_library(Utility STATIC src/Utility/Utility.cpp)
@@ -26,7 +35,7 @@ target_link_libraries(HTTPClient hv_static Utility)
 #HTTPServer
 add_subdirectory(${PROJECT_SOURCE_DIR}/src/Server)
 target_link_libraries(HTTPServer ${OPENSSL_LIBRARIES})
-target_link_libraries(HTTPServer hv_static Utility)
+target_link_libraries(HTTPServer hv_static Utility pq)
 
 #ClientTest
 add_subdirectory(${PROJECT_SOURCE_DIR}/tests/Client)
@@ -36,4 +45,4 @@ target_link_libraries(ClientTest hv_static Utility gtest)
 #ServerTest
 add_subdirectory(${PROJECT_SOURCE_DIR}/tests/Server)
 target_link_libraries(ServerTest ${OPENSSL_LIBRARIES})
-target_link_libraries(ServerTest hv_static Utility gtest)
+target_link_libraries(ServerTest hv_static Utility gtest pq)
