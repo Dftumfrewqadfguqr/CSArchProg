@@ -1,5 +1,5 @@
 
-#include "GlobalErrors.hpp"
+#include "../GlobalErrors.hpp"
 
 #include "User.hpp"
 

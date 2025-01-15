@@ -9,8 +9,8 @@
 #include <json.hpp>
 
 #include "User.hpp"
-#include "GlobalDefinitions.hpp"
-#include "GlobalErrors.hpp"
+#include "../GlobalDefinitions.hpp"
+#include "../GlobalErrors.hpp"
 
 class UsersStorage final {
 private:
