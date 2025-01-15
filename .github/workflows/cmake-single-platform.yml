@@ -11,6 +11,23 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - run: sudo apt-get update
-      - run: sudo apt-get install g++ clang make cmake libcurl4-openssl-dev
-      - run: git submodule update --init --recursive
+      - run: sudo apt-get install -y g++ clang make cmake cppcheck libcurl4-openssl-dev
+
+      #- run: git submodule update --init --recursive
       - run: mkdir -p build && cd build && cmake .. && make
+
+      - run: cd ..
+      - name: Client-sided tests
+        run: |
+          cd build
+          ./ClientTest
+          cd ..
+      - name: Server-sided tests
+        run: |
+          cd build
+          ./ServerTest
+          cd ..
+      - name: Static tests (only WARNINGS)
+        run: cppcheck --enable=warning --std=c++17 --force .
+
+
