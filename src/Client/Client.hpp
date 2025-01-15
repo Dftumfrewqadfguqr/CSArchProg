@@ -24,6 +24,8 @@ private:
             "change user",
             "delete self",
             "delete user"
+
+
     };
 
     std::array<std::string, 14> _commandsOutlines = {
@@ -41,6 +43,8 @@ private:
             "change user data by ID",
             "delete current user",
             "delete user by ID"
+
+
     };
 
     bool _running = false;

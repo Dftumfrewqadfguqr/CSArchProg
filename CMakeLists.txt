@@ -3,11 +3,16 @@ project(CSArchProg)
 cmake_policy(SET CMP0079 NEW)
 
 set(LIBHV_INCLUDE ${PROJECT_BINARY_DIR}/external/libhv/libhv/include/hv)
+#set(GT_INCLUDE ${PROJECT_BINARY_DIR}/external/googletest/googletest/include)
 find_package(OpenSSL REQUIRED)
 
 #libhv
 include_directories(${LIBHV_INCLUDE})
 add_subdirectory(${PROJECT_SOURCE_DIR}/external/libhv)
+
+#google test
+#include_directories(${GT_INCLUDE})
+#add_subdirectory(${PROJECT_SOURCE_DIR}/external/googletest)
 
 #Utility
 include_directories(${PROJECT_SOURCE_DIR}/src/Utility)
