@@ -14,7 +14,7 @@ jobs:
       - run: sudo apt-get update
       - run: sudo apt-get install -y g++ clang make cmake cppcheck libcurl4-openssl-dev
 
-      #- run: git submodule update --init --recursive
+      - run: git submodule update --init --recursive
       - run: mkdir -p build && cd build && cmake .. && make
 
       - run: cd ..
