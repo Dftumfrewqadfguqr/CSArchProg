@@ -3,6 +3,7 @@
 #include "JsonCast/JsonCast.hpp"
 #include "Utility.hpp"
 
+#include "hv/requests.h"
 #include "Routers.hpp"
 
 std::optional<User> Auth(const std::string &header)
@@ -33,6 +34,24 @@ std::optional<User> Auth(const std::string &header)
 }
 
 void route::RegisterResources(hv::HttpService &router) {
+
+    router.GET("/greet/{user_id}", [](HttpRequest *req, HttpResponse *resp)
+    {
+        std::string user_id = req->GetParam("user_id");
+        auto res = requests::get(("http://microservice:5001/greet/" + user_id).c_str());
+
+        if (res == nullptr)
+        {
+            std::cout << "request failed!" << std::endl;
+            return 404;
+        }
+        std::cout << res->status_code << " " << res->status_message() << std::endl;
+        std::cout << res->body.c_str() << std::endl;
+        resp->status_code = res->status_code;
+        resp->body = res->body;
+
+        return 200; });
+
     // попытка входа
     router.GET("/login", [](HttpRequest *req, HttpResponse *resp) {
         nlohmann::json response;

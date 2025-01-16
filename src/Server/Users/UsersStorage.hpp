@@ -7,6 +7,7 @@
 #include <optional>
 #include <variant>
 #include <json.hpp>
+#include <libpq-fe.h>
 
 #include "User.hpp"
 #include "../GlobalDefinitions.hpp"
@@ -14,6 +15,10 @@
 
 class UsersStorage final {
 private:
+    PGconn *connectDB();
+
+    void initDB();
+
     Mutex _storage_mtx;
     typedef typename std::map<std::string, User> Users;
     Users _storage GUARDED_BY(_storage_mtx) = Users();

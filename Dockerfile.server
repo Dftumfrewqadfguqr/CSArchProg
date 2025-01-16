@@ -1,0 +1,12 @@
+FROM debian:unstable-slim
+
+RUN apt-get update && \
+    apt-get install -y libpq-dev libjsoncpp-dev && \
+    apt-get clean
+
+WORKDIR /app
+COPY build/HTTPServer /app/HTTPServer
+
+EXPOSE 8080
+
+CMD ["./HTTPServer"]

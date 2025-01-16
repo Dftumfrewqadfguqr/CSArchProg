@@ -1,7 +1,60 @@
 
 #include <Utility.hpp>
+#include <iostream>
 
 #include "UsersStorage.hpp"
+
+PGconn *connectDB() {
+    const char *host = getenv("POSTGRES_HOST");
+    const char *dbname = getenv("POSTGRES_DB");
+    const char *user = getenv("POSTGRES_USER");
+    const char *password = getenv("POSTGRES_PASSWORD");
+
+    std::string conninfo = "host=" + std::string(host ? host : "localhost") +
+                           " dbname=" + std::string(dbname ? dbname : "mydatabase") +
+                           " user=" + std::string(user ? user : "myuser") +
+                           " password=" + std::string(password ? password : "mypassword");
+
+    PGconn *conn = PQconnectdb(conninfo.c_str());
+
+    if (PQstatus(conn) != CONNECTION_OK)
+    {
+        std::cerr << "Connection to database failed: "
+                  << PQerrorMessage(conn) << std::endl;
+        PQfinish(conn);
+        return nullptr;
+    }
+
+    return conn;
+}
+
+void initDB()
+{
+    PGconn *conn = connectDB();
+    if (!conn)
+    {
+        std::cerr << "Failed to connect to the database for initialization." << std::endl;
+        return;
+    }
+
+    const char *createTableQuery =
+            "CREATE TABLE IF NOT EXISTS users ("
+            "id SERIAL PRIMARY KEY,"
+            "name TEXT UNIQUE NOT NULL,"
+            "password TEXT NOT NULL,"
+            "privilege TEXT NOT NULL"
+            ");";
+
+    PGresult *res = PQexec(conn, createTableQuery);
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        std::cerr << "Failed to create users table: "
+                  << PQerrorMessage(conn) << std::endl;
+    }
+
+    PQclear(res);
+    PQfinish(conn);
+}
 
 bool UsersStorage::loginIsExist(const std::string &login) {
     for (const auto &item : _storage) if (item.second.login == login) return true;
@@ -14,6 +67,8 @@ std::optional<User> UsersStorage::getByLogin(const std::string &login) {
 }
 
 UsersStorage::UsersStorage() {
+    initDB();
+
     User default_admin;
     default_admin.uuid = Utility::GenerateUUID();
     default_admin.login = "admin";
